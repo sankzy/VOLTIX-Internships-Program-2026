@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SankzyTech — Technology Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a href="#top" class="logo">SankzyTech</a>
+    <nav class="nav">
+      <a href="#work">Work</a>
+      <a href="#process">Process</a>
+      <a href="#team">Team</a>
+    </nav>
+    <a href="#contact" class="btn btn-signal">Request a service</a>
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <nav class="nav-mobile">
+    <a href="#work">Work</a>
+    <a href="#process">Process</a>
+    <a href="#team">Team</a>
+    <a href="#contact">Request a service</a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero wrap">
+    <div class="hero-text">
+      <p class="kicker">A technology studio</p>
+      <h1>Ideas lose their charge<br> in the gap before<br> they become products.</h1>
+      <p class="hero-sub">SankzyTech carries them across that gap — building the software, data systems, interfaces, and security that a real product needs to hold up in the world.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn btn-signal">Request a service</a>
+        <a href="#work" class="link-arrow">See what we build</a>
+      </div>
+    </div>
+    <div class="hero-diagram" aria-hidden="true">
+      <svg viewBox="0 0 480 520" class="circuit">
+        <path class="wire-path" d="M 40 260 C 140 260, 140 90, 240 90" />
+        <path class="wire-path" d="M 40 260 C 140 260, 140 190, 240 190" />
+        <path class="wire-path" d="M 40 260 C 140 260, 140 330, 240 330" />
+        <path class="wire-path" d="M 40 260 C 140 260, 140 430, 240 430" />
+        <circle class="node-source" cx="40" cy="260" r="9"/>
+        <g class="node">
+          <circle cx="240" cy="90" r="6"/>
+          <text x="258" y="86">Full-stack builds</text>
+        </g>
+        <g class="node">
+          <circle cx="240" cy="190" r="6"/>
+          <text x="258" y="186">Data &amp; analytics</text>
+        </g>
+        <g class="node">
+          <circle cx="240" cy="330" r="6"/>
+          <text x="258" y="326">Product &amp; UX design</text>
+        </g>
+        <g class="node">
+          <circle cx="240" cy="430" r="6"/>
+          <text x="258" y="426">Security hardening</text>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <!-- WORK / SERVICES -->
+  <section id="work" class="services">
+    <div class="wrap">
+      <p class="kicker">What we build</p>
+      <h2>Four disciplines, one studio.</h2>
+    </div>
+
+    <div class="service-row wrap">
+      <div class="service-copy">
+        <span class="service-tag tag-signal">01</span>
+        <h3>Full-stack development</h3>
+        <p>End-to-end web applications built on whichever stack fits the problem, not whichever we happen to prefer. We take a product from a rough idea through to something a team can actually run, maintain, and grow.</p>
+      </div>
+      <div class="service-visual visual-signal" aria-hidden="true"></div>
+    </div>
+
+    <div class="service-row wrap reverse">
+      <div class="service-copy">
+        <span class="service-tag tag-wire">02</span>
+        <h3>Data analytics</h3>
+        <p>Raw exports and scattered spreadsheets turned into dashboards and reports that a founder can actually make decisions from — built with the analysis and visualization tools that match the data you already have.</p>
+      </div>
+      <div class="service-visual visual-wire" aria-hidden="true"></div>
+    </div>
+
+    <div class="service-row wrap">
+      <div class="service-copy">
+        <span class="service-tag tag-ash">03</span>
+        <h3>Product &amp; UX design</h3>
+        <p>Research, wireframes, and prototypes that get tested against real users before a single line of production code is written — so the interface earns its complexity instead of assuming it.</p>
+      </div>
+      <div class="service-visual visual-ash" aria-hidden="true"></div>
+    </div>
+
+    <div class="service-row wrap reverse">
+      <div class="service-copy">
+        <span class="service-tag tag-signal">04</span>
+        <h3>Cybersecurity</h3>
+        <p>Networks, systems, and applications reviewed the way an attacker would look at them — closing the gaps before they become the reason a launch gets delayed or a company gets hurt.</p>
+      </div>
+      <div class="service-visual visual-signal-2" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process" class="process">
+    <div class="wrap">
+      <p class="kicker">How we work</p>
+      <h2>From request to a live product.</h2>
+      <ol class="process-list">
+        <li>
+          <span class="step-index">1</span>
+          <div>
+            <h3>Scope the request</h3>
+            <p>You tell us what's slowing you down or what you're trying to build. We turn that into a concrete brief with a realistic timeline.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-index">2</span>
+          <div>
+            <h3>Design the approach</h3>
+            <p>Architecture, data model, or interface — whichever the request calls for — mapped out and checked against your constraints before any build work starts.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-index">3</span>
+          <div>
+            <h3>Build in the open</h3>
+            <p>Work happens in short cycles with something to look at early, so direction gets corrected in days, not after a full deliverable.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-index">4</span>
+          <div>
+            <h3>Hand off &amp; support</h3>
+            <p>You get the finished product, the source, and documentation clear enough that your team isn't stuck waiting on us to make the next change.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section id="team" class="team">
+    <div class="wrap">
+      <p class="kicker">Who's behind it</p>
+      <h2>A small team, each covering a discipline.</h2>
+      <div class="team-grid">
+        <article class="team-card card-signal">
+          <h3>Sanke Silas</h3>
+          <p class="role">Founder &amp; Full-Stack Developer</p>
+          <p>Focused on scalable full-stack builds — where the architecture decisions get made before the interface does.</p>
+        </article>
+        <article class="team-card card-wire">
+          <h3>Mariam Fathy</h3>
+          <p class="role">Co-Founder &amp; Data Analyst</p>
+          <p>Works across Python, SQL, and BI tooling to turn a company's raw data into something its team can actually act on.</p>
+        </article>
+        <article class="team-card card-ash">
+          <h3>Karim Reda</h3>
+          <p class="role">Co-Founder &amp; Security Lead</p>
+          <p>Comes from a SOC and networking background — reviews every build for the gaps that only show up under real pressure.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT / CTA -->
+  <section id="contact" class="cta">
+    <div class="wrap cta-inner">
+      <h2>Have a product that needs building?</h2>
+      <p>Tell us what you're working on. We'll reply with a scoped plan, not a sales call.</p>
+      <a href="mailto:hello@sankzytech.studio" class="btn btn-signal">hello@sankzytech.studio</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <span>SankzyTech</span>
+    <span>© 2026 SankzyTech Studio. Built for the Full Stack Development track.</span>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -179,12 +179,44 @@
     </div>
   </section>
 
-  <!-- CONTACT / CTA -->
+  <!-- CONTACT / INQUIRY -->
   <section id="contact" class="cta">
-    <div class="wrap cta-inner">
-      <h2>Have a product that needs building?</h2>
-      <p>Tell us what you're working on. We'll reply with a scoped plan, not a sales call.</p>
-      <a href="mailto:hello@sankzytech.studio" class="btn btn-signal">hello@sankzytech.studio</a>
+    <div class="wrap cta-grid">
+      <div class="cta-intro">
+        <h2>Have a product that needs building?</h2>
+        <p>Tell us what you're working on. We'll reply with a scoped plan, not a sales call.</p>
+        <p class="cta-alt">Or reach us directly at <a href="mailto:hello@sankzytech.studio" class="link-arrow">hello@sankzytech.studio</a></p>
+      </div>
+
+      <form id="contact-form" class="contact-form" novalidate>
+        <div class="field">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" autocomplete="name" required />
+          <span class="field-error" data-error-for="name"></span>
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" autocomplete="email" required />
+          <span class="field-error" data-error-for="email"></span>
+        </div>
+
+        <div class="field">
+          <label for="subject">Subject</label>
+          <input type="text" id="subject" name="subject" required />
+          <span class="field-error" data-error-for="subject"></span>
+        </div>
+
+        <div class="field">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="5" required></textarea>
+          <span class="field-error" data-error-for="message"></span>
+        </div>
+
+        <button type="submit" class="btn btn-signal" id="contact-submit">Send inquiry</button>
+
+        <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+      </form>
     </div>
   </section>
 

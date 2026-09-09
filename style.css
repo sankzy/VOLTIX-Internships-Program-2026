@@ -286,12 +286,81 @@ a{ color: inherit; text-decoration: none; }
   margin-bottom: 12px;
 }
 
-/* ---------- cta ---------- */
+/* ---------- cta / contact ---------- */
 .cta{ padding: 110px 0; background: var(--paper); }
 .cta h2{ color: var(--text-on-paper); max-width: 16ch; }
 .cta p{ color: var(--text-on-paper-mid); margin-top: 16px; font-size: 1.05rem; }
-.cta-inner{ text-align: left; }
-.cta .btn-signal{ margin-top: 30px; }
+.cta-alt{ margin-top: 22px; font-size: 0.95rem; }
+.cta-alt .link-arrow{ color: var(--text-on-paper); border-color: var(--signal-dim); }
+
+.cta-grid{
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.contact-form{
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: var(--panel);
+  padding: 32px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.field{ display: flex; flex-direction: column; gap: 6px; }
+.field label{
+  font-family: var(--font-head);
+  font-size: 0.85rem;
+  color: var(--text-mid);
+}
+.field input, .field textarea{
+  background: var(--ink);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 4px;
+  padding: 11px 13px;
+  color: var(--text-hi);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  resize: vertical;
+}
+.field input:focus, .field textarea:focus{
+  outline: none;
+  border-color: var(--signal);
+}
+.field input.invalid, .field textarea.invalid{
+  border-color: #C9564B;
+}
+.field-error{
+  min-height: 16px;
+  font-size: 0.8rem;
+  color: #E08278;
+}
+
+.contact-form .btn{
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  margin-top: 6px;
+}
+.contact-form .btn:disabled{
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form-status{
+  min-height: 20px;
+  font-size: 0.9rem;
+  font-family: var(--font-head);
+}
+.form-status.success{ color: #7CC5A3; }
+.form-status.error{ color: #E08278; }
+
+@media (max-width: 860px){
+  .cta-grid{ grid-template-columns: 1fr; gap: 40px; }
+}
 
 /* ---------- footer ---------- */
 .site-footer{ padding: 30px 0 40px; }

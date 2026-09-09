@@ -1,18 +1,19 @@
 # SankzyTech Landing Page
 
-A responsive company landing page built for the VOLTIX Full Stack Development internship — Task 1.
+A responsive company landing page with a working contact/inquiry system, built for the VOLTIX Full Stack Development internship — Task 1 (landing page) and Task 2 (Contact & Inquiry System).
 
 ## Project structure
 
 ```
 voltix-landing/
-├── index.html      # Page structure and content
+├── index.html      # Page structure and content, including the contact form
 ├── style.css       # Design tokens, layout, and component styles
-├── script.js       # Mobile navigation toggle behavior
+├── script.js       # Mobile nav toggle + contact form submission logic
+├── backend/         # Express + MongoDB API that stores inquiries (see backend/README.md)
 └── README.md        # This file
 ```
 
-Each file has a single responsibility: `index.html` holds content and structure only, `style.css` holds all visual styling, and `script.js` holds the one piece of interactive behavior (the mobile menu). No inline styles or inline scripts are used, so any of the three can be edited independently.
+Each file has a single responsibility: `index.html` holds content and structure only, `style.css` holds all visual styling, and `script.js` holds interactive behavior (mobile menu, and the contact form's validation + API call). The backend is a separate service — see `backend/README.md` for its structure, setup, and deployment.
 
 ## Design decisions
 
@@ -39,8 +40,14 @@ Any static host works since there's no backend or build step:
 - **Vercel** — `vercel` CLI or drag-and-drop via the dashboard
 - **GitHub Pages** — push to a repo and enable Pages on the `main` branch
 
+## Contact system (Task 2)
+
+The contact form in the `#contact` section submits to a backend API (`POST /api/contact`), which validates the input and stores it in MongoDB. See `backend/README.md` for the API contract, local setup, and deployment steps.
+
+Before this works end-to-end, update `API_BASE_URL` in `script.js` to point at your deployed backend URL (it defaults to `http://localhost:4000` for local development).
+
 ## Possible next steps (not implemented, out of scope for this task)
 
 - Split `style.css` into `base.css` / `layout.css` / `components.css` if the site grows past one page
 - Extract the hero SVG into its own `.svg` asset if it's reused elsewhere
-- Add a contact form with real form handling instead of a `mailto:` link
+- Add a basic admin view to list submitted inquiries

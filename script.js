@@ -16,7 +16,7 @@ mobileNav.querySelectorAll("a").forEach((link) => {
 /* ---------- Contact form ---------- */
 
 // Update this once the backend is deployed (see backend/README.md).
-const API_BASE_URL = "http://localhost:4000";
+const API_BASE_URL = "https://sankzytech.onrender.com";
 const CONTACT_ENDPOINT = `${API_BASE_URL}/api/contact`;
 
 const form = document.getElementById("contact-form");

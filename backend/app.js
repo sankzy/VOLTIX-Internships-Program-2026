@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const contactRoutes = require("./routes/contactRoutes");
+const contentRoutes = require("./routes/contentRoutes");
 
 function createApp() {
   const app = express();
@@ -17,6 +18,7 @@ function createApp() {
   });
 
   app.use("/api/contact", contactRoutes);
+  app.use("/api/content", contentRoutes);
 
   app.use((req, res) => {
     res.status(404).json({ success: false, message: "Not found." });

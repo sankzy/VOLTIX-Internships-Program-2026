@@ -9,15 +9,20 @@ backend/
 ├── app.js                  # Express app definition (middleware + routes)
 ├── server.js               # Bootstraps: connects DB, then starts the app
 ├── config/
-│   └── db.js                # MongoDB connection
+│   └── db.js                 # MongoDB connection
 ├── models/
-│   └── Inquiry.js           # Mongoose schema for a stored inquiry
+│   ├── Inquiry.js            # Schema for a stored contact inquiry (Task 2)
+│   └── ContentItem.js        # Schema for a manageable content item (Task 3)
 ├── middleware/
-│   └── validateContact.js   # Input validation, runs before the controller
+│   ├── validateContact.js    # Input validation for /api/contact
+│   ├── validateContent.js    # Input validation for /api/content
+│   └── requireAdminKey.js    # Shared-key gate protecting /api/content
 ├── controllers/
-│   └── contactController.js # Business logic: save a validated inquiry
+│   ├── contactController.js  # Business logic: save a validated inquiry
+│   └── contentController.js  # Business logic: content item CRUD
 ├── routes/
-│   └── contactRoutes.js     # Wires POST /api/contact to validation + controller
+│   ├── contactRoutes.js      # Wires POST /api/contact to validation + controller
+│   └── contentRoutes.js      # Wires /api/content CRUD to auth + validation + controller
 └── .env.example
 ```
 
@@ -69,12 +74,39 @@ This means, for example, the validation rules can be changed without touching th
 { "success": false, "message": "Something went wrong while saving your inquiry. Please try again." }
 ```
 
+### Content management — `/api/content`
+
+All endpoints below require an `x-admin-key` header matching the `ADMIN_KEY` environment variable. This is a shared-secret gate appropriate for a single internal tool, not a full multi-user auth system.
+
+| Method | Path | Purpose |
+|---|---|---|
+| GET | `/api/content` | List all content items, newest first |
+| POST | `/api/content` | Create a content item (`title`, `content`, optional `section`) |
+| PUT | `/api/content/:id` | Update a content item |
+| DELETE | `/api/content/:id` | Delete a content item |
+
+**Missing/invalid key — `401 Unauthorized`:**
+```json
+{ "success": false, "message": "Unauthorized." }
+```
+
+**Create/update validation failure — `400 Bad Request`:**
+```json
+{ "success": false, "message": "Validation failed.", "errors": { "title": "Title is required." } }
+```
+
+**Not found — `404 Not Found`:**
+```json
+{ "success": false, "message": "Content item not found." }
+```
+
 ## Local setup
 
 1. `cd backend && npm install`
-2. Copy `.env.example` to `.env` and fill in `MONGODB_URI` (see below for a free database).
+2. Copy `.env.example` to `.env` and fill in `MONGODB_URI` (see below for a free database) and `ADMIN_KEY` (any long random string — this is what unlocks `admin.html`).
 3. `npm run dev` (or `npm start`)
-4. Test it: `curl -X POST http://localhost:4000/api/contact -H "Content-Type: application/json" -d '{"name":"Test","email":"test@example.com","subject":"Hi","message":"Hello"}'`
+4. Test the contact endpoint: `curl -X POST http://localhost:4000/api/contact -H "Content-Type: application/json" -d '{"name":"Test","email":"test@example.com","subject":"Hi","message":"Hello"}'`
+5. Test the content endpoint: `curl http://localhost:4000/api/content -H "x-admin-key: <your ADMIN_KEY>"`
 
 ## Getting a free MongoDB database (MongoDB Atlas)
 
@@ -94,7 +126,7 @@ Vercel (which hosts the frontend) runs serverless functions with no persistent p
 2. Go to https://render.com → New → Web Service → connect the repo.
 3. Set **Root Directory** to `backend` (if it's in the same repo as the frontend).
 4. Build command: `npm install` — Start command: `npm start`
-5. Add environment variables in Render's dashboard: `MONGODB_URI`, `ALLOWED_ORIGINS` (set this to `https://sankzytech.vercel.app`).
+5. Add environment variables in Render's dashboard: `MONGODB_URI`, `ADMIN_KEY`, `ALLOWED_ORIGINS` (set this to `https://sankzytech.vercel.app`).
 6. Deploy. Render gives you a URL like `https://sankzytech-backend.onrender.com`.
 
 ## Connecting the frontend

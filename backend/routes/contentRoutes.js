@@ -1,5 +1,5 @@
 const express = require("express");
-const requireAdminKey = require("../middleware/requireAdminKey");
+const requireAuth = require("../middleware/requireAuth");
 const validateContentItem = require("../middleware/validateContent");
 const {
   listContent,
@@ -10,8 +10,8 @@ const {
 
 const router = express.Router();
 
-// All content management operations require the admin key.
-router.use(requireAdminKey);
+// All content management operations require a valid JWT (from POST /api/auth/login).
+router.use(requireAuth);
 
 router.get("/", listContent);
 router.post("/", validateContentItem, createContent);

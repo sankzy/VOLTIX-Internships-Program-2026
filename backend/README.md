@@ -16,11 +16,12 @@ backend/
 ├── middleware/
 │   ├── validateContact.js    # Input validation for /api/contact
 │   ├── validateContent.js    # Input validation for /api/content
-│   └── requireAdminKey.js    # Shared-key gate protecting /api/content
+│   └── requireAuth.js        # Verifies the Bearer JWT on protected routes
 ├── controllers/
 │   ├── contactController.js  # Business logic: save a validated inquiry
 │   └── contentController.js  # Business logic: content item CRUD
 ├── routes/
+│   ├── authRoutes.js         # POST /api/auth/login — issues a signed JWT
 │   ├── contactRoutes.js      # Wires POST /api/contact to validation + controller
 │   └── contentRoutes.js      # Wires /api/content CRUD to auth + validation + controller
 └── .env.example
@@ -74,9 +75,32 @@ This means, for example, the validation rules can be changed without touching th
 { "success": false, "message": "Something went wrong while saving your inquiry. Please try again." }
 ```
 
+### Authentication — `/api/auth`
+
+The content management endpoints require a signed JWT rather than a static shared key. Get one by logging in:
+
+**`POST /api/auth/login`**
+
+Request body:
+```json
+{ "key": "<the ADMIN_KEY value from your environment>" }
+```
+
+Success — `200 OK`:
+```json
+{ "success": true, "token": "<jwt>", "expiresIn": "12h" }
+```
+
+Wrong password — `401 Unauthorized`:
+```json
+{ "success": false, "message": "Incorrect admin key." }
+```
+
+Send the returned token on every content request as `Authorization: Bearer <jwt>`. Tokens expire after 12 hours; after that, log in again to get a new one.
+
 ### Content management — `/api/content`
 
-All endpoints below require an `x-admin-key` header matching the `ADMIN_KEY` environment variable. This is a shared-secret gate appropriate for a single internal tool, not a full multi-user auth system.
+All endpoints below require a valid `Authorization: Bearer <jwt>` header (see above).
 
 | Method | Path | Purpose |
 |---|---|---|
@@ -85,10 +109,11 @@ All endpoints below require an `x-admin-key` header matching the `ADMIN_KEY` env
 | PUT | `/api/content/:id` | Update a content item |
 | DELETE | `/api/content/:id` | Delete a content item |
 
-**Missing/invalid key — `401 Unauthorized`:**
+**Missing/invalid/expired token — `401 Unauthorized`:**
 ```json
 { "success": false, "message": "Unauthorized." }
 ```
+(or `"Session expired."` specifically for an expired-but-otherwise-valid token)
 
 **Create/update validation failure — `400 Bad Request`:**
 ```json
@@ -103,10 +128,11 @@ All endpoints below require an `x-admin-key` header matching the `ADMIN_KEY` env
 ## Local setup
 
 1. `cd backend && npm install`
-2. Copy `.env.example` to `.env` and fill in `MONGODB_URI` (see below for a free database) and `ADMIN_KEY` (any long random string — this is what unlocks `admin.html`).
+2. Copy `.env.example` to `.env` and fill in `MONGODB_URI` (see below for a free database), `ADMIN_KEY` (your login password), and `JWT_SECRET` (a separate random string used to sign tokens).
 3. `npm run dev` (or `npm start`)
 4. Test the contact endpoint: `curl -X POST http://localhost:4000/api/contact -H "Content-Type: application/json" -d '{"name":"Test","email":"test@example.com","subject":"Hi","message":"Hello"}'`
-5. Test the content endpoint: `curl http://localhost:4000/api/content -H "x-admin-key: <your ADMIN_KEY>"`
+5. Test login: `curl -X POST http://localhost:4000/api/auth/login -H "Content-Type: application/json" -d '{"key":"<your ADMIN_KEY>"}'` — copy the returned `token`.
+6. Test the content endpoint with it: `curl http://localhost:4000/api/content -H "Authorization: Bearer <token>"`
 
 ## Getting a free MongoDB database (MongoDB Atlas)
 
@@ -126,7 +152,7 @@ Vercel (which hosts the frontend) runs serverless functions with no persistent p
 2. Go to https://render.com → New → Web Service → connect the repo.
 3. Set **Root Directory** to `backend` (if it's in the same repo as the frontend).
 4. Build command: `npm install` — Start command: `npm start`
-5. Add environment variables in Render's dashboard: `MONGODB_URI`, `ADMIN_KEY`, `ALLOWED_ORIGINS` (set this to `https://sankzytech.vercel.app`).
+5. Add environment variables in Render's dashboard: `MONGODB_URI`, `ADMIN_KEY`, `JWT_SECRET`, `ALLOWED_ORIGINS` (set this to `https://sankzytech.vercel.app`).
 6. Deploy. Render gives you a URL like `https://sankzytech-backend.onrender.com`.
 
 ## Connecting the frontend

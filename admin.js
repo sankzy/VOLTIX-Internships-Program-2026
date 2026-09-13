@@ -1,8 +1,9 @@
 // Update this once the backend is deployed — same value as script.js's API_BASE_URL.
 const API_BASE_URL = "http://localhost:4000";
 const CONTENT_ENDPOINT = `${API_BASE_URL}/api/content`;
+const LOGIN_ENDPOINT = `${API_BASE_URL}/api/auth/login`;
 
-const STORAGE_KEY = "sankzytech_admin_key";
+const STORAGE_KEY = "sankzytech_admin_token";
 
 // ---------- Elements ----------
 const loginGate = document.getElementById("login-gate");
@@ -27,7 +28,7 @@ const itemContentInput = document.getElementById("item-content");
 const modalStatus = document.getElementById("modal-status");
 const cancelModalBtn = document.getElementById("cancel-modal-btn");
 
-let adminKey = sessionStorage.getItem(STORAGE_KEY) || "";
+let authToken = sessionStorage.getItem(STORAGE_KEY) || "";
 
 // ---------- Helpers ----------
 function setStatus(el, message, type) {
@@ -39,7 +40,7 @@ function setStatus(el, message, type) {
 function authHeaders() {
   return {
     "Content-Type": "application/json",
-    "x-admin-key": adminKey,
+    "Authorization": `Bearer ${authToken}`,
   };
 }
 
@@ -81,7 +82,7 @@ function formatDate(iso) {
 }
 
 // ---------- Auth ----------
-if (adminKey) {
+if (authToken) {
   showManager();
 }
 
@@ -95,19 +96,25 @@ loginForm.addEventListener("submit", async (e) => {
     return;
   }
 
-  // Verify the key by attempting to list content with it.
   try {
-    const res = await fetch(CONTENT_ENDPOINT, { headers: { "x-admin-key": candidateKey } });
+    const res = await fetch(LOGIN_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key: candidateKey }),
+    });
+    const result = await res.json().catch(() => ({}));
+
     if (res.status === 401) {
-      setStatus(loginStatus, "Incorrect admin key.", "error");
+      setStatus(loginStatus, result.message || "Incorrect admin key.", "error");
       return;
     }
-    if (!res.ok) {
+    if (!res.ok || !result.token) {
       setStatus(loginStatus, "Could not reach the server. Try again.", "error");
       return;
     }
-    adminKey = candidateKey;
-    sessionStorage.setItem(STORAGE_KEY, adminKey);
+
+    authToken = result.token;
+    sessionStorage.setItem(STORAGE_KEY, authToken);
     adminKeyInput.value = "";
     showManager();
   } catch (err) {
@@ -116,7 +123,7 @@ loginForm.addEventListener("submit", async (e) => {
 });
 
 logoutBtn.addEventListener("click", () => {
-  adminKey = "";
+  authToken = "";
   sessionStorage.removeItem(STORAGE_KEY);
   showLogin();
 });
@@ -132,7 +139,7 @@ async function loadContent() {
 
     if (res.status === 401) {
       setStatus(listStatus, "Session expired — please log in again.", "error");
-      adminKey = "";
+      authToken = "";
       sessionStorage.removeItem(STORAGE_KEY);
       showLogin();
       return;

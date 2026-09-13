@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const contactRoutes = require("./routes/contactRoutes");
 const contentRoutes = require("./routes/contentRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 function createApp() {
   const app = express();
@@ -17,6 +18,7 @@ function createApp() {
     res.json({ status: "ok", service: "sankzytech-backend" });
   });
 
+  app.use("/api/auth", authRoutes);
   app.use("/api/contact", contactRoutes);
   app.use("/api/content", contentRoutes);
 

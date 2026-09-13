@@ -55,7 +55,7 @@ Before this works end-to-end, update `API_BASE_URL` in `script.js` to point at y
 
 `admin.html` is a self-contained internal tool for managing site content — add, view, edit, and delete content items, all backed by the `/api/content` endpoints and stored in MongoDB. It's deliberately not linked from the public site (`index.html`); access it directly at `/admin.html`.
 
-Access is gated by a single shared admin key (set as `ADMIN_KEY` in the backend's environment) rather than a full multi-user login system — appropriate for one internal tool used by the site owner, not a public-facing feature.
+Access is protected by a real login flow: the admin key you set (`ADMIN_KEY` in the backend) is your password, and logging in exchanges it for a short-lived, signed JWT (`JWT_SECRET` signs it, 12-hour expiry) that authenticates subsequent requests. This is a genuine authentication mechanism, just scoped to one admin user rather than a full multi-account system.
 
 Before this works end-to-end, update `API_BASE_URL` at the top of `admin.js` to match your deployed backend URL, the same as `script.js`.
 

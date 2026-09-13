@@ -1,5 +1,5 @@
 // Update this once the backend is deployed — same value as script.js's API_BASE_URL.
-const API_BASE_URL = "http://localhost:4000";
+const API_BASE_URL = "https://sankzytech.onrender.com";
 const CONTENT_ENDPOINT = `${API_BASE_URL}/api/content`;
 const LOGIN_ENDPOINT = `${API_BASE_URL}/api/auth/login`;
 

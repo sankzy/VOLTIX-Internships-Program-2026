@@ -1,67 +1,115 @@
-# SankzyTech Landing Page
+# SankzyTech: Landing Page, Contact System and Content Manager
 
-A responsive company landing page with a contact/inquiry system and an internal content management tool, built for the VOLTIX Full Stack Development internship — Task 1 (landing page), Task 2 (Contact & Inquiry System), and Task 3 (Internal Content Management).
+A responsive landing page for a fictional technology studio, with a working contact form that saves inquiries to a database and a password-protected page for managing site content. It was built for the VOLTIX Full Stack Development Internship 2026 and covers three tasks:
+
+1. **Task 1:** the public landing page
+2. **Task 2:** a contact and inquiry system (form, validation, API, database)
+3. **Task 3:** an internal content management page with login
+
+**Live site:** https://sankzytech.vercel.app
+**API:** https://sankzytech.onrender.com (free tier, the first request after a quiet period can take 30 to 50 seconds)
+
+![Landing page on desktop](docs/screenshot-home.png)
+
+<img src="docs/screenshot-mobile.png" alt="Landing page on a phone" width="260" />
+
+## Built with
+
+- HTML, CSS and vanilla JavaScript for the frontend (no framework, no build step)
+- Node.js and Express for the API
+- MongoDB (Atlas) with Mongoose for storage
+- JSON Web Tokens (`jsonwebtoken`) for admin login
+- Vercel for the frontend and Render for the backend
+
+## Features
+
+- Responsive layout with a mobile menu, an animated circuit-style hero diagram, and `prefers-reduced-motion` support
+- Contact form that validates input in the browser and again on the server, then stores the inquiry in MongoDB
+- Admin page (`/admin.html`, not linked from the public site) to add, view, edit and delete content items
+- Admin login that exchanges a password for a signed token that expires after 12 hours
+- Layered backend: routes, middleware, controllers and models, each with one job
 
 ## Project structure
 
-```
-voltix-landing/
-├── index.html      # Public site: structure and content, including the contact form
-├── style.css       # Shared design tokens, layout, and component styles
-├── script.js       # Mobile nav toggle + contact form submission logic
-├── admin.html       # Internal content management page (not linked from the public site)
-├── admin.css        # Admin-page-specific styles (reuses tokens from style.css)
-├── admin.js         # Admin login gate + content CRUD logic
-├── backend/         # Express + MongoDB API (contact + content) — see backend/README.md
-└── README.md        # This file
+```text
+VOLTIX-Internships-Program-2026/
+├── index.html       # Public site: structure and content, including the contact form
+├── style.css        # Design tokens, layout and component styles
+├── script.js        # Mobile menu and contact form submission
+├── admin.html       # Content manager page
+├── admin.css        # Admin styles (reuses tokens from style.css)
+├── admin.js         # Login gate and content create/read/update/delete
+├── docs/            # README screenshots
+├── backend/         # Express + MongoDB API, see backend/README.md
+└── README.md
 ```
 
-Each file has a single responsibility: `index.html` holds content and structure only, `style.css` holds all visual styling, and `script.js` holds interactive behavior (mobile menu, and the contact form's validation + API call). The backend is a separate service — see `backend/README.md` for its structure, setup, and deployment.
+## Run it locally
+
+**Frontend.** It is static, so open `index.html` in a browser, or serve the folder:
+
+```bash
+npx serve .
+```
+
+The forms call the deployed API by default. To use your own backend, change `API_BASE_URL` at the top of `script.js` and `admin.js` (for example to `http://localhost:4000`).
+
+**Backend.** You need Node.js and a free MongoDB Atlas database:
+
+```bash
+cd backend
+npm install
+cp .env.example .env    # then fill in the values below
+npm run dev
+```
+
+| Variable          | What it is                                                   |
+| ----------------- | ------------------------------------------------------------ |
+| `MONGODB_URI`     | Connection string from MongoDB Atlas                         |
+| `ADMIN_KEY`       | The password used to log in to `admin.html`                  |
+| `JWT_SECRET`      | A different long random string, used to sign login tokens    |
+| `PORT`            | Port for the server (default `4000`)                         |
+| `ALLOWED_ORIGINS` | Comma-separated list of sites allowed to call the API (CORS) |
+
+Never commit `.env`. It is already in `backend/.gitignore`.
+
+## API at a glance
+
+| Method | Path               | Auth   | Purpose                                  |
+| ------ | ------------------ | ------ | ---------------------------------------- |
+| POST   | `/api/contact`     | none   | Validate and save a contact inquiry      |
+| POST   | `/api/auth/login`  | none   | Exchange `ADMIN_KEY` for a 12-hour token |
+| GET    | `/api/content`     | Bearer | List content items, newest first         |
+| POST   | `/api/content`     | Bearer | Create a content item                    |
+| PUT    | `/api/content/:id` | Bearer | Update a content item                    |
+| DELETE | `/api/content/:id` | Bearer | Delete a content item                    |
+
+Request and response examples are in [`backend/README.md`](backend/README.md).
 
 ## Design decisions
 
-- **Color tokens** are defined once in `:root` in `style.css` and reused everywhere via CSS variables (`--ink`, `--signal`, `--wire`, etc.), so the palette can be changed from one place.
-- **Two typefaces**: Space Grotesk for headings, IBM Plex Sans for body text — loaded from Google Fonts.
-- **Layout**: an asymmetric hero (text + circuit-style diagram) rather than a centered stock layout, and alternating left/right service sections instead of identical cards, to avoid a generic templated look.
-- **Motion**: a single animated moment (the circuit lines drawing in on page load), respecting `prefers-reduced-motion`. No hover animations were added beyond simple color transitions on buttons/links.
+- **Colour tokens** are defined once in `:root` in `style.css` and reused through CSS variables, so the palette changes in one place.
+- **Two typefaces:** Space Grotesk for headings and IBM Plex Sans for body text, loaded from Google Fonts.
+- **Layout:** an asymmetric hero (text beside a circuit-style diagram) and alternating left and right service sections, to avoid a generic template look.
+- **Motion:** one animated moment (the circuit lines drawing in on load), turned off for visitors who ask for reduced motion.
+- **One job per file:** markup in HTML, styling in CSS, behaviour in JavaScript. On the backend, validation lives in middleware so rules can change without touching controllers.
 
-## Running locally
+## Deployment
 
-No build step or dependencies required. Either:
+- **Frontend:** any static host works. It is deployed on Vercel, and it also works on Netlify or GitHub Pages.
+- **Backend:** deployed separately on Render, because Vercel runs serverless functions and this is a long-running Express server. Set the Root Directory to `backend`, the build command to `npm install`, the start command to `npm start`, and add the four environment variables above. Full steps are in [`backend/README.md`](backend/README.md).
 
-1. Open `index.html` directly in a browser, or
-2. Serve it locally for a closer-to-production experience:
-   ```bash
-   npx serve .
-   ```
+## Known limitations
 
-## Deploying
+- There is one shared admin password, not per-user accounts.
+- The login endpoint has no rate limiting yet, so repeated guesses are not slowed down.
+- The public page shows static copy. It does not yet read content items from `/api/content`.
+- There are no automated tests yet.
 
-The frontend (`index.html`, `admin.html`, and their assets) is a static site with no build step, so any static host works:
+## Next steps
 
-- **Netlify Drop** — drag the folder onto https://app.netlify.com/drop
-- **Vercel** — `vercel` CLI or drag-and-drop via the dashboard
-- **GitHub Pages** — push to a repo and enable Pages on the `main` branch
-
-The `backend/` folder is a separate Node service and needs its own host — see `backend/README.md`.
-
-## Contact system (Task 2)
-
-The contact form in the `#contact` section submits to a backend API (`POST /api/contact`), which validates the input and stores it in MongoDB. See `backend/README.md` for the API contract, local setup, and deployment steps.
-
-Before this works end-to-end, update `API_BASE_URL` in `script.js` to point at your deployed backend URL (it defaults to `http://localhost:4000` for local development).
-
-## Content management (Task 3)
-
-`admin.html` is a self-contained internal tool for managing site content — add, view, edit, and delete content items, all backed by the `/api/content` endpoints and stored in MongoDB. It's deliberately not linked from the public site (`index.html`); access it directly at `/admin.html`.
-
-Access is protected by a real login flow: the admin key you set (`ADMIN_KEY` in the backend) is your password, and logging in exchanges it for a short-lived, signed JWT (`JWT_SECRET` signs it, 12-hour expiry) that authenticates subsequent requests. This is a genuine authentication mechanism, just scoped to one admin user rather than a full multi-account system.
-
-Before this works end-to-end, update `API_BASE_URL` at the top of `admin.js` to match your deployed backend URL, the same as `script.js`.
-
-## Possible next steps (not implemented, out of scope for this task)
-
-- Split `style.css` into `base.css` / `layout.css` / `components.css` if the site grows past one page
-- Extract the hero SVG into its own `.svg` asset if it's reused elsewhere
-- Replace the shared admin key with real per-user authentication if more than one person needs access
-- Have the public site actually render content items from `/api/content` instead of static copy
+- Show content items from the API on the public page
+- Add rate limiting to `/api/auth/login`
+- Replace the shared admin key with per-user accounts if more than one person needs access
+- Add automated tests for the validation middleware and the API routes
+- Add meta description and Open Graph tags to `index.html` for better search and sharing previews

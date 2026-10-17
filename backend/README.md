@@ -1,6 +1,6 @@
-# SankzyTech Backend — Contact & Inquiry API
+# SankzyTech Backend: Contact, Auth and Content API
 
-Backend for Task 2 of the VOLTIX internship: a validated Contact/Inquiry API backed by MongoDB.
+Express and MongoDB backend for the VOLTIX Full Stack Development Internship. It provides a validated contact and inquiry API (Task 2), admin login with JWT, and content management endpoints (Task 3). The frontend is documented in the [main README](../README.md).
 
 ## Structure
 

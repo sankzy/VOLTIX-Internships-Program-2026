@@ -28,18 +28,20 @@ backend/
 ```
 
 Each layer has one job, and each only talks to the layer next to it:
+
 - **routes** — maps an HTTP verb + path to middleware/controller, nothing else
 - **middleware** — checks the request is valid; rejects bad input before it reaches business logic
 - **controllers** — assumes input is already valid; only responsible for saving it and shaping the response
 - **models** — defines what an Inquiry looks like in the database
 
-This means, for example, the validation rules can be changed without touching the controller, and the controller doesn't need to know *how* a request was validated.
+This means, for example, the validation rules can be changed without touching the controller, and the controller doesn't need to know _how_ a request was validated.
 
 ## API
 
 ### `POST /api/contact`
 
 **Request body:**
+
 ```json
 {
   "name": "Ada Lovelace",
@@ -50,6 +52,7 @@ This means, for example, the validation rules can be changed without touching th
 ```
 
 **Success — `201 Created`:**
+
 ```json
 {
   "success": true,
@@ -59,6 +62,7 @@ This means, for example, the validation rules can be changed without touching th
 ```
 
 **Validation failure — `400 Bad Request`:**
+
 ```json
 {
   "success": false,
@@ -71,6 +75,7 @@ This means, for example, the validation rules can be changed without touching th
 ```
 
 **Server error — `500 Internal Server Error`:**
+
 ```json
 { "success": false, "message": "Something went wrong while saving your inquiry. Please try again." }
 ```
@@ -82,16 +87,19 @@ The content management endpoints require a signed JWT rather than a static share
 **`POST /api/auth/login`**
 
 Request body:
+
 ```json
 { "key": "<the ADMIN_KEY value from your environment>" }
 ```
 
 Success — `200 OK`:
+
 ```json
 { "success": true, "token": "<jwt>", "expiresIn": "12h" }
 ```
 
 Wrong password — `401 Unauthorized`:
+
 ```json
 { "success": false, "message": "Incorrect admin key." }
 ```
@@ -102,25 +110,29 @@ Send the returned token on every content request as `Authorization: Bearer <jwt>
 
 All endpoints below require a valid `Authorization: Bearer <jwt>` header (see above).
 
-| Method | Path | Purpose |
-|---|---|---|
-| GET | `/api/content` | List all content items, newest first |
-| POST | `/api/content` | Create a content item (`title`, `content`, optional `section`) |
-| PUT | `/api/content/:id` | Update a content item |
-| DELETE | `/api/content/:id` | Delete a content item |
+| Method | Path               | Purpose                                                        |
+| ------ | ------------------ | -------------------------------------------------------------- |
+| GET    | `/api/content`     | List all content items, newest first                           |
+| POST   | `/api/content`     | Create a content item (`title`, `content`, optional `section`) |
+| PUT    | `/api/content/:id` | Update a content item                                          |
+| DELETE | `/api/content/:id` | Delete a content item                                          |
 
 **Missing/invalid/expired token — `401 Unauthorized`:**
+
 ```json
 { "success": false, "message": "Unauthorized." }
 ```
+
 (or `"Session expired."` specifically for an expired-but-otherwise-valid token)
 
 **Create/update validation failure — `400 Bad Request`:**
+
 ```json
 { "success": false, "message": "Validation failed.", "errors": { "title": "Title is required." } }
 ```
 
 **Not found — `404 Not Found`:**
+
 ```json
 { "success": false, "message": "Content item not found." }
 ```
@@ -158,9 +170,11 @@ Vercel (which hosts the frontend) runs serverless functions with no persistent p
 ## Connecting the frontend
 
 In `script.js`, update:
+
 ```js
 const API_BASE_URL = "https://sankzytech-backend.onrender.com";
 ```
+
 to whatever URL Render (or your chosen host) gives you, then redeploy the frontend on Vercel.
 
 Note: Render's free tier "spins down" after inactivity, so the first request after a while can take ~30-50 seconds to wake up — this is normal, not a bug.

@@ -40,7 +40,7 @@ function setStatus(el, message, type) {
 function authHeaders() {
   return {
     "Content-Type": "application/json",
-    "Authorization": `Bearer ${authToken}`,
+    Authorization: `Bearer ${authToken}`,
   };
 }
 

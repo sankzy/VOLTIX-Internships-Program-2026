@@ -7,7 +7,7 @@ const inquirySchema = new mongoose.Schema(
     subject: { type: String, required: true, trim: true },
     message: { type: String, required: true, trim: true },
   },
-  { timestamps: true } // adds createdAt / updatedAt automatically
+  { timestamps: true }, // adds createdAt / updatedAt automatically
 );
 
 module.exports = mongoose.model("Inquiry", inquirySchema);

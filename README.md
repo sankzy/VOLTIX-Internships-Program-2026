@@ -39,6 +39,8 @@ VOLTIX-Internships-Program-2026/
 ├── admin.html       # Content manager page
 ├── admin.css        # Admin styles (reuses tokens from style.css)
 ├── admin.js         # Login gate and content create/read/update/delete
+├── og-image.jpg     # 1200x630 preview image for shared links
+├── favicon.svg      # Browser tab icon
 ├── docs/            # README screenshots
 ├── backend/         # Express + MongoDB API, see backend/README.md
 └── README.md
@@ -86,6 +88,22 @@ Never commit `.env`. It is already in `backend/.gitignore`.
 
 Request and response examples are in [`backend/README.md`](backend/README.md).
 
+## Accessibility and SEO
+
+- Skip-to-content link on both pages, and visible focus rings on links, buttons and form fields
+- Form fields have labels, and form messages are announced to screen readers (`role="status"`)
+- Text colours pass WCAG AA contrast against their backgrounds
+- Meta description, canonical link, Open Graph and Twitter card tags, a 1200x630 share image and a favicon on the public page
+- `admin.html` is marked `noindex` so search engines skip it
+
+## Formatting
+
+Prettier keeps the code style consistent (2 spaces, 100 characters per line). It needs no install:
+
+```bash
+npx prettier --write "*.{html,css,js,md}" "backend/**/*.{js,json,md}"
+```
+
 ## Design decisions
 
 - **Colour tokens** are defined once in `:root` in `style.css` and reused through CSS variables, so the palette changes in one place.
@@ -112,4 +130,3 @@ Request and response examples are in [`backend/README.md`](backend/README.md).
 - Add rate limiting to `/api/auth/login`
 - Replace the shared admin key with per-user accounts if more than one person needs access
 - Add automated tests for the validation middleware and the API routes
-- Add meta description and Open Graph tags to `index.html` for better search and sharing previews
